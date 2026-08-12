@@ -493,3 +493,30 @@ h1 span {
     font-size: 0.55rem;
   }
 }
+.share-button {
+  display: block;
+
+  width: 100%;
+
+  margin-top: 8px;
+
+  padding: 15px 20px;
+
+  border: 2px solid #111;
+
+  background: #111;
+
+  color: #f1eee5;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.share-button:hover {
+  background: transparent;
+  color: #111;
+  transform: translateY(-2px);
+}

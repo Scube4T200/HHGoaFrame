@@ -20,10 +20,11 @@ function App() {
   const [name, setName] = useState("");
   const [stack, setStack] = useState("");
   const [builderClass, setBuilderClass] = useState("");
+  const [isSharing, setIsSharing] = useState(false);
 
-  // =========================
-  // HANDLE PHOTO UPLOAD
-  // =========================
+  // -----------------------------
+  // HANDLE IMAGE UPLOAD
+  // -----------------------------
 
   const handleFile = async (event) => {
     const file = event.target.files?.[0];
@@ -33,13 +34,13 @@ function App() {
     try {
       let imageFile = file;
 
-      // Convert HEIC / HEIF to JPEG
-      if (
+      const isHEIC =
         file.type === "image/heic" ||
         file.type === "image/heif" ||
         file.name.toLowerCase().endsWith(".heic") ||
-        file.name.toLowerCase().endsWith(".heif")
-      ) {
+        file.name.toLowerCase().endsWith(".heif");
+
+      if (isHEIC) {
         const converted = await heic2any({
           blob: file,
           toType: "image/jpeg",
@@ -56,22 +57,25 @@ function App() {
       setPreview(imageUrl);
       setImageBlob(imageFile);
 
-      // Generate random builder class
       const randomClass =
         BUILDER_CLASSES[
-          Math.floor(Math.random() * BUILDER_CLASSES.length)
+          Math.floor(
+            Math.random() * BUILDER_CLASSES.length
+          )
         ];
 
       setBuilderClass(randomClass);
     } catch (error) {
       console.error(error);
-      alert("Couldn't process that image. Try another photo.");
+      alert(
+        "Couldn't process that image. Try another photo."
+      );
     }
   };
 
-  // =========================
+  // -----------------------------
   // LOAD IMAGE
-  // =========================
+  // -----------------------------
 
   const loadImage = (src) =>
     new Promise((resolve, reject) => {
@@ -83,9 +87,9 @@ function App() {
       image.src = src;
     });
 
-  // =========================
-  // COVER-CROP IMAGE
-  // =========================
+  // -----------------------------
+  // COVER IMAGE
+  // -----------------------------
 
   const drawCoverImage = (
     ctx,
@@ -95,7 +99,9 @@ function App() {
     width,
     height
   ) => {
-    const imageRatio = image.width / image.height;
+    const imageRatio =
+      image.width / image.height;
+
     const boxRatio = width / height;
 
     let sourceWidth;
@@ -105,16 +111,22 @@ function App() {
 
     if (imageRatio > boxRatio) {
       sourceHeight = image.height;
-      sourceWidth = image.height * boxRatio;
+      sourceWidth =
+        image.height * boxRatio;
 
-      sourceX = (image.width - sourceWidth) / 2;
+      sourceX =
+        (image.width - sourceWidth) / 2;
+
       sourceY = 0;
     } else {
       sourceWidth = image.width;
-      sourceHeight = image.width / boxRatio;
+      sourceHeight =
+        image.width / boxRatio;
 
       sourceX = 0;
-      sourceY = (image.height - sourceHeight) / 2;
+
+      sourceY =
+        (image.height - sourceHeight) / 2;
     }
 
     ctx.drawImage(
@@ -130,14 +142,15 @@ function App() {
     );
   };
 
-  // =========================
-  // CREATE CARD CANVAS
-  // =========================
+  // -----------------------------
+  // GENERATE FINAL CARD
+  // -----------------------------
 
-  const createCardCanvas = async () => {
+  const createCardBlob = async () => {
     if (!imageBlob) return null;
 
-    const canvas = document.createElement("canvas");
+    const canvas =
+      document.createElement("canvas");
 
     const width = 1080;
     const height = 1500;
@@ -148,286 +161,298 @@ function App() {
     const ctx = canvas.getContext("2d");
 
     if (!ctx) {
-      throw new Error("Your browser could not create the image.");
+      throw new Error(
+        "Canvas is not supported."
+      );
     }
 
-    const imageUrl = URL.createObjectURL(imageBlob);
+    const imageUrl =
+      URL.createObjectURL(imageBlob);
 
-    try {
-      const image = await loadImage(imageUrl);
+    const image =
+      await loadImage(imageUrl);
 
-      // =========================
-      // BACKGROUND
-      // =========================
+    URL.revokeObjectURL(imageUrl);
 
-      ctx.fillStyle = "#111111";
-      ctx.fillRect(0, 0, width, height);
+    // -----------------------------
+    // BACKGROUND
+    // -----------------------------
 
-      // =========================
-      // HEADER
-      // =========================
+    ctx.fillStyle = "#111111";
 
-      ctx.fillStyle = "#f1eee5";
-      ctx.font = "bold 30px Arial";
+    ctx.fillRect(
+      0,
+      0,
+      width,
+      height
+    );
 
-      ctx.textAlign = "left";
+    // -----------------------------
+    // HEADER
+    // -----------------------------
 
-      ctx.fillText("HH", 55, 60);
+    ctx.fillStyle = "#f1eee5";
+    ctx.font = "bold 30px Arial";
+    ctx.textAlign = "left";
 
-      ctx.textAlign = "right";
+    ctx.fillText(
+      "HH",
+      55,
+      60
+    );
 
-      ctx.fillText(
-        "GOA '26",
-        width - 55,
-        60
+    ctx.textAlign = "right";
+
+    ctx.fillText(
+      "GOA '26",
+      width - 55,
+      60
+    );
+
+    ctx.textAlign = "left";
+
+    // -----------------------------
+    // PHOTO
+    // -----------------------------
+
+    const photoX = 55;
+    const photoY = 100;
+    const photoWidth = width - 110;
+    const photoHeight = photoWidth;
+
+    drawCoverImage(
+      ctx,
+      image,
+      photoX,
+      photoY,
+      photoWidth,
+      photoHeight
+    );
+
+    // -----------------------------
+    // INFORMATION
+    // -----------------------------
+
+    const infoY =
+      photoY + photoHeight + 70;
+
+    // NAME
+
+    ctx.fillStyle = "#f1eee5";
+    ctx.font = "bold 68px Arial";
+    ctx.textAlign = "left";
+
+    const displayName = (
+      name || "YOUR NAME"
+    ).toUpperCase();
+
+    ctx.fillText(
+      displayName,
+      55,
+      infoY
+    );
+
+    // STACK
+
+    ctx.font = "bold 26px Arial";
+    ctx.fillStyle = "#aaaaaa";
+
+    ctx.fillText(
+      (
+        stack || "YOUR STACK / ROLE"
+      ).toUpperCase(),
+      55,
+      infoY + 45
+    );
+
+    // BUILDER CLASS
+
+    const classText =
+      builderClass || "BUILDER CLASS";
+
+    ctx.font = "bold 25px Arial";
+
+    const classWidth =
+      ctx.measureText(classText).width + 40;
+
+    ctx.fillStyle = "#d8ff00";
+
+    ctx.fillRect(
+      55,
+      infoY + 80,
+      classWidth,
+      52
+    );
+
+    ctx.fillStyle = "#111111";
+
+    ctx.fillText(
+      classText,
+      75,
+      infoY + 115
+    );
+
+    // -----------------------------
+    // EVENT METADATA
+    // -----------------------------
+
+    ctx.fillStyle = "#777777";
+    ctx.font = "bold 18px Arial";
+
+    ctx.fillText(
+      "GOA, INDIA · 28—31 OCT 2026",
+      55,
+      height - 200
+    );
+
+    // -----------------------------
+    // FOOTER
+    // -----------------------------
+
+    ctx.fillStyle = "#f1eee5";
+    ctx.font = "bold 21px Arial";
+
+    const footerY = height - 150;
+
+    ctx.textAlign = "left";
+
+    ctx.fillText(
+      "LESS NOISE.",
+      55,
+      footerY
+    );
+
+    ctx.textAlign = "right";
+
+    ctx.fillText(
+      "MORE SIGNAL.",
+      width - 55,
+      footerY
+    );
+
+    ctx.textAlign = "left";
+
+    // -----------------------------
+    // RETURN PNG
+    // -----------------------------
+
+    return new Promise((resolve) => {
+      canvas.toBlob(
+        (blob) => {
+          resolve(blob);
+        },
+        "image/png"
       );
-
-      ctx.textAlign = "left";
-
-      // =========================
-      // PHOTO
-      // =========================
-
-      const photoX = 55;
-      const photoY = 100;
-      const photoWidth = width - 110;
-      const photoHeight = photoWidth;
-
-      drawCoverImage(
-        ctx,
-        image,
-        photoX,
-        photoY,
-        photoWidth,
-        photoHeight
-      );
-
-      // =========================
-      // INFORMATION
-      // =========================
-
-      const infoY =
-        photoY + photoHeight + 70;
-
-      // =========================
-      // NAME
-      // =========================
-
-      ctx.fillStyle = "#f1eee5";
-      ctx.font = "bold 65px Arial";
-      ctx.textAlign = "left";
-
-      const displayName = (
-        name || "YOUR NAME"
-      ).toUpperCase();
-
-      ctx.fillText(
-        displayName,
-        55,
-        infoY
-      );
-
-      // =========================
-      // STACK / ROLE
-      // =========================
-
-      ctx.font = "bold 26px Arial";
-      ctx.fillStyle = "#aaaaaa";
-
-      ctx.fillText(
-        (
-          stack || "YOUR STACK / ROLE"
-        ).toUpperCase(),
-        55,
-        infoY + 45
-      );
-
-      // =========================
-      // BUILDER CLASS
-      // =========================
-
-      const classText =
-        builderClass || "BUILDER CLASS";
-
-      ctx.font = "bold 25px Arial";
-
-      const classWidth =
-        ctx.measureText(classText).width + 40;
-
-      ctx.fillStyle = "#d8ff00";
-
-      ctx.fillRect(
-        55,
-        infoY + 80,
-        classWidth,
-        52
-      );
-
-      ctx.fillStyle = "#111111";
-
-      ctx.fillText(
-        classText,
-        75,
-        infoY + 115
-      );
-
-      // =========================
-      // EVENT METADATA
-      // =========================
-
-      ctx.fillStyle = "#777777";
-      ctx.font = "bold 19px Arial";
-
-      ctx.fillText(
-        "GOA, INDIA · 28—31 OCT 2026",
-        55,
-        height - 200
-      );
-
-      // =========================
-      // FOOTER
-      // =========================
-
-      ctx.fillStyle = "#f1eee5";
-      ctx.font = "bold 21px Arial";
-
-      const footerY = height - 150;
-
-      ctx.textAlign = "left";
-
-      ctx.fillText(
-        "LESS NOISE.",
-        55,
-        footerY
-      );
-
-      ctx.textAlign = "right";
-
-      ctx.fillText(
-        "MORE SIGNAL.",
-        width - 55,
-        footerY
-      );
-
-      ctx.textAlign = "left";
-
-      return canvas;
-    } finally {
-      URL.revokeObjectURL(imageUrl);
-    }
+    });
   };
 
-  // =========================
-  // DOWNLOAD CARD
-  // =========================
+  // -----------------------------
+  // DOWNLOAD
+  // -----------------------------
 
   const generateCard = async () => {
     if (!imageBlob) return;
 
     try {
-      const canvas = await createCardCanvas();
-
-      if (!canvas) return;
-
-      canvas.toBlob(
-        (blob) => {
-          if (!blob) {
-            alert("Couldn't generate the image.");
-            return;
-          }
-
-          const url = URL.createObjectURL(blob);
-
-          const link =
-            document.createElement("a");
-
-          link.href = url;
-
-          link.download =
-            "HH-Goa-2026-Builder-ID.png";
-
-          link.style.display = "none";
-
-          document.body.appendChild(link);
-
-          link.click();
-
-          document.body.removeChild(link);
-
-          setTimeout(() => {
-            URL.revokeObjectURL(url);
-          }, 1000);
-        },
-        "image/png"
-      );
-    } catch (error) {
-      console.error(error);
-      alert("Couldn't generate the builder card.");
-    }
-  };
-
-  // =========================
-  // SHARE TO X
-  // =========================
-
-  const shareToX = async () => {
-    if (!imageBlob) return;
-
-    const caption =
-      "Built different at Hacker House Goa 2026. #FrameInGoa";
-
-    try {
-      const canvas = await createCardCanvas();
-
-      if (!canvas) return;
-
-      const blob = await new Promise((resolve) => {
-        canvas.toBlob(
-          resolve,
-          "image/png"
-        );
-      });
+      const blob =
+        await createCardBlob();
 
       if (!blob) {
-        throw new Error(
-          "Couldn't create share image."
+        alert(
+          "Couldn't generate the image."
         );
-      }
-
-      const file = new File(
-        [blob],
-        "HH-Goa-2026-Builder-ID.png",
-        {
-          type: "image/png",
-        }
-      );
-
-      // =========================
-      // MOBILE NATIVE SHARE
-      // =========================
-
-      if (
-        navigator.share &&
-        navigator.canShare &&
-        navigator.canShare({
-          files: [file],
-        })
-      ) {
-        await navigator.share({
-          text: caption,
-          files: [file],
-        });
-
         return;
       }
 
-      // =========================
-      // DESKTOP X FALLBACK
-      // =========================
+      const url =
+        URL.createObjectURL(blob);
 
+      const link =
+        document.createElement("a");
+
+      link.href = url;
+
+      link.download =
+        "HH-Goa-2026-Builder-ID.png";
+
+      link.style.display = "none";
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      document.body.removeChild(link);
+
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+      }, 1000);
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        "Couldn't generate the Builder ID."
+      );
+    }
+  };
+
+  // -----------------------------
+  // SHARE TO X
+  // -----------------------------
+
+  const shareToX = async () => {
+    if (!imageBlob || isSharing) return;
+
+    try {
+      setIsSharing(true);
+
+      // Generate the exact same final PNG
+      const blob =
+        await createCardBlob();
+
+      if (!blob) {
+        throw new Error(
+          "Couldn't generate card."
+        );
+      }
+
+      // Upload PNG to our Vercel API
+      const response = await fetch(
+        "/api/upload",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "image/png",
+          },
+          body: blob,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Upload failed: ${response.status}`
+        );
+      }
+
+      const data =
+        await response.json();
+
+      if (!data.url) {
+        throw new Error(
+          "No image URL returned."
+        );
+      }
+
+      // X caption
+      const caption =
+        "I just built my HH Goa 2026 identity. See you in Goa! #FrameInGoa";
+
+      // Open X with caption + generated image URL
       const xUrl =
-        "https://twitter.com/intent/tweet?text=" +
-        encodeURIComponent(caption);
+        "https://twitter.com/intent/tweet" +
+        "?text=" +
+        encodeURIComponent(caption) +
+        "&url=" +
+        encodeURIComponent(data.url);
 
       window.open(
         xUrl,
@@ -435,30 +460,22 @@ function App() {
         "noopener,noreferrer"
       );
     } catch (error) {
-      // User cancelled native sharing
-      if (error?.name === "AbortError") {
-        return;
-      }
-
-      console.error(
-        "Share failed:",
-        error
-      );
+      console.error(error);
 
       alert(
-        "Sharing isn't supported here. Download the image and post it on X."
+        "Couldn't prepare your Builder ID for X. Please try again."
       );
+    } finally {
+      setIsSharing(false);
     }
   };
 
-  // =========================
+  // -----------------------------
   // UI
-  // =========================
+  // -----------------------------
 
   return (
     <main className="app">
-
-      {/* NAVBAR */}
 
       <nav className="navbar">
 
@@ -471,8 +488,6 @@ function App() {
         </div>
 
       </nav>
-
-      {/* BUILDER */}
 
       <section className="builder">
 
@@ -533,6 +548,7 @@ function App() {
             {/* UPLOAD */}
 
             <button
+              type="button"
               className="upload-button"
               onClick={() =>
                 fileInputRef.current?.click()
@@ -546,7 +562,12 @@ function App() {
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/png,image/jpeg,image/heic,image/heif"
+              accept="
+                image/png,
+                image/jpeg,
+                image/heic,
+                image/heif
+              "
               onChange={handleFile}
               hidden
             />
@@ -555,12 +576,12 @@ function App() {
               JPG · PNG · HEIC
             </p>
 
-            {/* ACTION BUTTONS */}
+            {/* DOWNLOAD + SHARE */}
 
             {preview && (
-              <div className="action-buttons">
-
+              <>
                 <button
+                  type="button"
                   className="download-button"
                   onClick={generateCard}
                 >
@@ -568,13 +589,16 @@ function App() {
                 </button>
 
                 <button
+                  type="button"
                   className="share-button"
                   onClick={shareToX}
+                  disabled={isSharing}
                 >
-                  SHARE TO X
+                  {isSharing
+                    ? "PREPARING..."
+                    : "SHARE TO X"}
                 </button>
-
-              </div>
+              </>
             )}
 
           </div>
@@ -635,7 +659,8 @@ function App() {
             <div className="card-info">
 
               <div className="builder-name">
-                {name || "YOUR NAME"}
+                {name ||
+                  "YOUR NAME"}
               </div>
 
               <div className="builder-stack">
