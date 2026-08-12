@@ -460,7 +460,7 @@ function App() {
       // -----------------------------
 
       const caption =
-        "I just built my HH Goa 2026 identity. See you in Goa! #FrameInGoa";
+        "Just made my Builder ID. Looking forward to building, learning, and connecting at HH Goa 2026. Hoping to see you in Goa! #FrameInGoa";
 
       // -----------------------------
       // SHARE PAGE
