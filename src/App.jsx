@@ -67,6 +67,7 @@ function App() {
       setBuilderClass(randomClass);
     } catch (error) {
       console.error(error);
+
       alert(
         "Couldn't process that image. Try another photo."
       );
@@ -415,15 +416,23 @@ function App() {
         );
       }
 
-      // Upload PNG to our Vercel API
+      // -----------------------------
+      // UPLOAD PNG TO VERCEL API
+      // -----------------------------
+
+      const formData = new FormData();
+
+      formData.append(
+        "image",
+        blob,
+        "HH-Goa-2026-Builder-ID.png"
+      );
+
       const response = await fetch(
         "/api/upload",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "image/png",
-          },
-          body: blob,
+          body: formData,
         }
       );
 
@@ -442,17 +451,34 @@ function App() {
         );
       }
 
-      // X caption
+      // -----------------------------
+      // X CAPTION
+      // -----------------------------
+
       const caption =
         "I just built my HH Goa 2026 identity. See you in Goa! #FrameInGoa";
 
-      // Open X with caption + generated image URL
+      // -----------------------------
+      // SHARE PAGE
+      // -----------------------------
+
+      const shareUrl =
+        `${window.location.origin}/api/share` +
+        `?image=${encodeURIComponent(data.url)}` +
+        `&name=${encodeURIComponent(
+          name || "HH Goa 2026 Builder"
+        )}`;
+
+      // -----------------------------
+      // OPEN X
+      // -----------------------------
+
       const xUrl =
         "https://twitter.com/intent/tweet" +
         "?text=" +
         encodeURIComponent(caption) +
         "&url=" +
-        encodeURIComponent(data.url);
+        encodeURIComponent(shareUrl);
 
       window.open(
         xUrl,

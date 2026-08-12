@@ -38,19 +38,28 @@ export default async function handler(req, res) {
       {
         access: "public",
         contentType: "image/png",
-        oidcToken: process.env.VERCEL_OIDC_TOKEN,
-        storeId: process.env.BLOB_STORE_ID,
+        token: process.env.BLOB_READ_WRITE_TOKEN,
       }
+    );
+
+    console.log(
+      "Upload successful:",
+      blob.url
     );
 
     return res.status(200).json({
       url: blob.url,
     });
   } catch (error) {
-    console.error("Upload error:", error);
+    console.error(
+      "Upload error:",
+      error
+    );
 
     return res.status(500).json({
-      error: error.message || "Failed to upload image",
+      error:
+        error.message ||
+        "Failed to upload image",
     });
   }
 }
