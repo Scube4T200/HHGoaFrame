@@ -420,19 +420,23 @@ function App() {
       // UPLOAD PNG TO VERCEL API
       // -----------------------------
 
-      const formData = new FormData();
-
-      formData.append(
-        "image",
-        blob,
-        "HH-Goa-2026-Builder-ID.png"
-      );
+      // Convert blob to base64 data URL and send as JSON.
+      // Vercel reliably parses application/json — no body-parser surprises.
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
 
       const response = await fetch(
         "/api/upload",
         {
           method: "POST",
-          body: formData,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ image: dataUrl }),
         }
       );
 

@@ -1,3 +1,12 @@
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export default async function handler(req, res) {
   const { image, name } = req.query;
 
@@ -5,7 +14,8 @@ export default async function handler(req, res) {
     return res.status(400).send("Missing image");
   }
 
-  const safeName = name || "HH Goa 2026 Builder";
+  const safeName = escapeHtml(name || "HH Goa 2026 Builder");
+  const safeImage = escapeHtml(image);
 
   res.setHeader("Content-Type", "text/html; charset=utf-8");
 
@@ -28,7 +38,7 @@ export default async function handler(req, res) {
     property="og:description"
     content="I just built my HH Goa 2026 identity. See you in Goa!"
   />
-  <meta property="og:image" content="${image}" />
+  <meta property="og:image" content="${safeImage}" />
   <meta property="og:image:width" content="1080" />
   <meta property="og:image:height" content="1500" />
 
@@ -38,13 +48,13 @@ export default async function handler(req, res) {
     name="twitter:description"
     content="I just built my HH Goa 2026 identity. See you in Goa!"
   />
-  <meta name="twitter:image" content="${image}" />
+  <meta name="twitter:image" content="${safeImage}" />
 </head>
 
 <body>
   <h1>${safeName} · HH Goa 2026</h1>
   <img
-    src="${image}"
+    src="${safeImage}"
     alt="HH Goa 2026 Builder ID"
     style="max-width:100%;height:auto;"
   />
