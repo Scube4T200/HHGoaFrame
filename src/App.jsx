@@ -192,14 +192,19 @@ function App() {
     // HEADER
     // -----------------------------
 
-    ctx.fillStyle = "#f1eee5";
+    // Green strip background
+    ctx.fillStyle = "#006B45";
+    ctx.fillRect(0, 0, width, 80);
+
+    // Yellow text
+    ctx.fillStyle = "#FFD900";
     ctx.font = "bold 30px Arial";
     ctx.textAlign = "left";
 
     ctx.fillText(
       "HH",
       55,
-      60
+      53
     );
 
     ctx.textAlign = "right";
@@ -207,7 +212,7 @@ function App() {
     ctx.fillText(
       "GOA '26",
       width - 55,
-      60
+      53
     );
 
     ctx.textAlign = "left";
@@ -217,7 +222,7 @@ function App() {
     // -----------------------------
 
     const photoX = 55;
-    const photoY = 100;
+    const photoY = 110;
     const photoWidth = width - 110;
     const photoHeight = photoWidth;
 
@@ -276,7 +281,7 @@ function App() {
     const classWidth =
       ctx.measureText(classText).width + 40;
 
-    ctx.fillStyle = "#d8ff00";
+    ctx.fillStyle = "#F5007D";
 
     ctx.fillRect(
       55,
@@ -285,7 +290,7 @@ function App() {
       52
     );
 
-    ctx.fillStyle = "#111111";
+    ctx.fillStyle = "#f1eee5";
 
     ctx.fillText(
       classText,

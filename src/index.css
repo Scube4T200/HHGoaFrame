@@ -222,8 +222,8 @@ h1 span {
 .download-button {
   border: 2px solid #111;
 
-  background: #d8ff00;
-  color: #111;
+  background: #F5007D;
+  color: #f1eee5;
 }
 
 .download-button:hover {
@@ -270,7 +270,7 @@ h1 span {
   background: #111;
   color: #f1eee5;
 
-  box-shadow: 18px 18px 0 #d8ff00;
+  box-shadow: 18px 18px 0 #F5007D;
 
   display: flex;
   flex-direction: column;
@@ -279,8 +279,13 @@ h1 span {
 .card-top {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
-  margin-bottom: 18px;
+  margin: -22px -22px 18px -22px;
+  padding: 9px 22px;
+
+  background: #006B45;
+  color: #FFD900;
 
   font-size: 0.7rem;
   font-weight: 700;
@@ -373,8 +378,8 @@ h1 span {
   margin-top: 16px;
   padding: 7px 10px;
 
-  background: #d8ff00;
-  color: #111;
+  background: #F5007D;
+  color: #f1eee5;
 
   font-size: 0.65rem;
   font-weight: 700;
@@ -429,7 +434,7 @@ h1 span {
   .builder-card {
     width: min(88vw, 420px);
 
-    box-shadow: 12px 12px 0 #d8ff00;
+    box-shadow: 12px 12px 0 #F5007D;
   }
 
   h1 {
@@ -474,7 +479,7 @@ h1 span {
 
     padding: 18px;
 
-    box-shadow: 9px 9px 0 #d8ff00;
+    box-shadow: 9px 9px 0 #F5007D;
   }
 
   .card-top {
