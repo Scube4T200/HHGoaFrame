@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import heic2any from "heic2any";
 import hhGoaLogo from "./assets/SVGLogo.svg";
-import ribbon from "./assets/Ribbon.svg";
 
 const BUILDER_CLASSES = [
   "THE SHIPPER",
@@ -194,36 +193,78 @@ function App() {
     // HEADER
     // -----------------------------
 
-    // Green strip
     ctx.fillStyle = "#006B45";
-    ctx.fillRect(0, 0, width, 100);
 
-    // Yellow text — HH left, GOA '26 right
+    ctx.fillRect(
+      0,
+      0,
+      width,
+      100
+    );
+
     ctx.fillStyle = "#FFD900";
     ctx.font = "bold 30px Arial";
     ctx.textAlign = "left";
-    ctx.fillText("HH", 55, 50);
+
+    ctx.fillText(
+      "HH",
+      55,
+      50
+    );
 
     ctx.textAlign = "right";
-    ctx.fillText("GOA '26", width - 55, 50);
 
-    // SVG logo — centred between the two text labels
-    const logo = await loadImage(hhGoaLogo);
+    ctx.fillText(
+      "GOA '26",
+      width - 55,
+      50
+    );
+
+    // -----------------------------
+    // HH GOA LOGO
+    // -----------------------------
+
+    const logo =
+      await loadImage(hhGoaLogo);
+
     const logoH = 56;
-    const logoW = (logo.width / logo.height) * logoH;
-    const logoX = (width - logoW) / 2;
-    const logoY = Math.round((50 - logoH / 2) - 4);
-    ctx.drawImage(logo, logoX, logoY, logoW, logoH);
 
-    // Date line below
+    const logoW =
+      (logo.width / logo.height) *
+      logoH;
+
+    const logoX =
+      (width - logoW) / 2;
+
+    const logoY =
+      Math.round(
+        (50 - logoH / 2) - 4
+      );
+
+    ctx.drawImage(
+      logo,
+      logoX,
+      logoY,
+      logoW,
+      logoH
+    );
+
+    // -----------------------------
+    // DATE
+    // -----------------------------
+
     ctx.fillStyle = "#FFD900";
     ctx.font = "bold 20px Arial";
     ctx.globalAlpha = 0.85;
     ctx.textAlign = "left";
-    ctx.fillText("GOA, INDIA · 28–31 OCT 2026", 55, 80);
-    ctx.globalAlpha = 1;
 
-    ctx.textAlign = "left";
+    ctx.fillText(
+      "GOA, INDIA · 28–31 OCT 2026",
+      55,
+      80
+    );
+
+    ctx.globalAlpha = 1;
 
     // -----------------------------
     // PHOTO
@@ -269,7 +310,8 @@ function App() {
     // STACK
 
     ctx.font = "bold 26px Arial";
-    ctx.fillStyle = "rgba(255,255,255,0.65)";
+    ctx.fillStyle =
+      "rgba(255,255,255,0.65)";
 
     ctx.fillText(
       (
@@ -287,7 +329,8 @@ function App() {
     ctx.font = "bold 25px Arial";
 
     const classWidth =
-      ctx.measureText(classText).width + 40;
+      ctx.measureText(classText).width +
+      40;
 
     ctx.fillStyle = "#F5007D";
 
@@ -305,24 +348,6 @@ function App() {
       75,
       infoY + 115
     );
-
-    // -----------------------------
-    // RIBBON
-    // -----------------------------
-
-    // Decorative border strip above the footer
-    // Ribbon SVG is 2501x74 — draw it scaled to card width at ~22px tall
-    const ribbonImg = await loadImage(ribbon);
-    const ribbonH = 22;
-    const ribbonW = (ribbonImg.width / ribbonImg.height) * ribbonH;
-    // Tile it across the full width
-    const ribbonY = height - 220;
-    let rx = 0;
-    while (rx < width) {
-      const drawW = Math.min(ribbonW, width - rx);
-      ctx.drawImage(ribbonImg, 0, 0, ribbonImg.width * (drawW / ribbonW), ribbonImg.height, rx, ribbonY, drawW, ribbonH);
-      rx += ribbonW;
-    }
 
     // -----------------------------
     // FOOTER
@@ -424,7 +449,6 @@ function App() {
     try {
       setIsSharing(true);
 
-      // Generate the exact same final PNG
       const blob =
         await createCardBlob();
 
@@ -434,29 +458,41 @@ function App() {
         );
       }
 
-      // -----------------------------
-      // UPLOAD PNG TO VERCEL API
-      // -----------------------------
+      // Convert PNG to base64 data URL
 
-      // Convert blob to base64 data URL and send as JSON.
-      // Vercel reliably parses application/json — no body-parser surprises.
-      const dataUrl = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
+      const dataUrl =
+        await new Promise(
+          (resolve, reject) => {
+            const reader =
+              new FileReader();
 
-      const response = await fetch(
-        "/api/upload",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ image: dataUrl }),
-        }
-      );
+            reader.onload = () =>
+              resolve(reader.result);
+
+            reader.onerror = reject;
+
+            reader.readAsDataURL(blob);
+          }
+        );
+
+      // Upload to Vercel API
+
+      const response =
+        await fetch(
+          "/api/upload",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body: JSON.stringify({
+              image: dataUrl,
+            }),
+          }
+        );
 
       if (!response.ok) {
         throw new Error(
@@ -486,9 +522,12 @@ function App() {
 
       const shareUrl =
         `${window.location.origin}/api/share` +
-        `?image=${encodeURIComponent(data.url)}` +
+        `?image=${encodeURIComponent(
+          data.url
+        )}` +
         `&name=${encodeURIComponent(
-          name || "HH Goa 2026 Builder"
+          name ||
+            "HH Goa 2026 Builder"
         )}`;
 
       // -----------------------------
@@ -498,9 +537,13 @@ function App() {
       const xUrl =
         "https://twitter.com/intent/tweet" +
         "?text=" +
-        encodeURIComponent(caption) +
+        encodeURIComponent(
+          caption
+        ) +
         "&url=" +
-        encodeURIComponent(shareUrl);
+        encodeURIComponent(
+          shareUrl
+        );
 
       window.open(
         xUrl,
@@ -571,7 +614,9 @@ function App() {
                 placeholder="Your name"
                 value={name}
                 onChange={(e) =>
-                  setName(e.target.value)
+                  setName(
+                    e.target.value
+                  )
                 }
                 maxLength={32}
               />
@@ -587,7 +632,9 @@ function App() {
                 placeholder="e.g. AI / Full Stack / Designer"
                 value={stack}
                 onChange={(e) =>
-                  setStack(e.target.value)
+                  setStack(
+                    e.target.value
+                  )
                 }
                 maxLength={40}
               />
@@ -664,13 +711,21 @@ function App() {
             <div className="card-top">
 
               <div className="card-top-row">
-                <span>HH</span>
+
+                <span>
+                  HH
+                </span>
+
                 <img
                   src={hhGoaLogo}
                   alt="Hacker House Goa"
                   className="card-top-logo"
                 />
-                <span>GOA '26</span>
+
+                <span>
+                  GOA '26
+                </span>
+
               </div>
 
               <div className="card-top-date">
@@ -730,15 +785,6 @@ function App() {
             </div>
 
             {/* CARD FOOTER */}
-
-            <div className="card-ribbon">
-              <img
-                src={ribbon}
-                alt=""
-                aria-hidden="true"
-                className="ribbon-strip"
-              />
-            </div>
 
             <div className="card-bottom">
 
