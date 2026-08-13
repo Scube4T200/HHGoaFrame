@@ -192,28 +192,25 @@ function App() {
     // HEADER
     // -----------------------------
 
-    // Green strip background
+    // Green strip background — tall enough for two lines
     ctx.fillStyle = "#006B45";
-    ctx.fillRect(0, 0, width, 80);
+    ctx.fillRect(0, 0, width, 100);
 
-    // Yellow text
+    // Yellow text — HH / GOA '26
     ctx.fillStyle = "#FFD900";
     ctx.font = "bold 30px Arial";
     ctx.textAlign = "left";
-
-    ctx.fillText(
-      "HH",
-      55,
-      53
-    );
+    ctx.fillText("HH", 55, 50);
 
     ctx.textAlign = "right";
+    ctx.fillText("GOA '26", width - 55, 50);
 
-    ctx.fillText(
-      "GOA '26",
-      width - 55,
-      53
-    );
+    // Date line — slightly smaller, slightly dimmer
+    ctx.font = "bold 20px Arial";
+    ctx.globalAlpha = 0.85;
+    ctx.textAlign = "left";
+    ctx.fillText("GOA, INDIA · 28–31 OCT 2026", 55, 80);
+    ctx.globalAlpha = 1;
 
     ctx.textAlign = "left";
 
@@ -222,7 +219,7 @@ function App() {
     // -----------------------------
 
     const photoX = 55;
-    const photoY = 110;
+    const photoY = 120;
     const photoWidth = width - 110;
     const photoHeight = photoWidth;
 
@@ -650,13 +647,14 @@ function App() {
 
             <div className="card-top">
 
-              <span>
-                HH
-              </span>
+              <div className="card-top-row">
+                <span>HH</span>
+                <span>GOA '26</span>
+              </div>
 
-              <span>
-                GOA '26
-              </span>
+              <div className="card-top-date">
+                GOA, INDIA · 28–31 OCT 2026
+              </div>
 
             </div>
 
