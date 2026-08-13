@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import heic2any from "heic2any";
-import hhGoaLogo from "./assets/HHGoaLogo.png";
+import hhGoaLogo from "./assets/SVGLogo.svg";
+import ribbon from "./assets/Ribbon.svg";
 
 const BUILDER_CLASSES = [
   "THE SHIPPER",
@@ -206,12 +207,12 @@ function App() {
     ctx.textAlign = "right";
     ctx.fillText("GOA '26", width - 55, 50);
 
-    // Logo — centred between the two text labels, top row
+    // SVG logo — centred between the two text labels
     const logo = await loadImage(hhGoaLogo);
-    const logoH = 46;
+    const logoH = 56;
     const logoW = (logo.width / logo.height) * logoH;
     const logoX = (width - logoW) / 2;
-    const logoY = (50 - logoH / 2) - 4;
+    const logoY = Math.round((50 - logoH / 2) - 4);
     ctx.drawImage(logo, logoX, logoY, logoW, logoH);
 
     // Date line below
@@ -304,6 +305,24 @@ function App() {
       75,
       infoY + 115
     );
+
+    // -----------------------------
+    // RIBBON
+    // -----------------------------
+
+    // Decorative border strip above the footer
+    // Ribbon SVG is 2501x74 — draw it scaled to card width at ~22px tall
+    const ribbonImg = await loadImage(ribbon);
+    const ribbonH = 22;
+    const ribbonW = (ribbonImg.width / ribbonImg.height) * ribbonH;
+    // Tile it across the full width
+    const ribbonY = height - 220;
+    let rx = 0;
+    while (rx < width) {
+      const drawW = Math.min(ribbonW, width - rx);
+      ctx.drawImage(ribbonImg, 0, 0, ribbonImg.width * (drawW / ribbonW), ribbonImg.height, rx, ribbonY, drawW, ribbonH);
+      rx += ribbonW;
+    }
 
     // -----------------------------
     // FOOTER
@@ -711,6 +730,15 @@ function App() {
             </div>
 
             {/* CARD FOOTER */}
+
+            <div className="card-ribbon">
+              <img
+                src={ribbon}
+                alt=""
+                aria-hidden="true"
+                className="ribbon-strip"
+              />
+            </div>
 
             <div className="card-bottom">
 
