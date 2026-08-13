@@ -278,31 +278,19 @@ h1 span {
 
 .card-top {
   display: flex;
-  flex-direction: column;
-  gap: 3px;
+  justify-content: center;
+  align-items: center;
 
   margin: -22px -22px 18px -22px;
-  padding: 9px 22px;
+  padding: 10px 22px;
 
   background: #006B45;
-  color: #FFD900;
-
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
 }
 
-.card-top-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-top-date {
-  font-size: 0.55rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  opacity: 0.85;
+.card-top-logo {
+  height: 60px;
+  width: auto;
+  display: block;
 }
 
 .photo-container {
@@ -499,8 +487,8 @@ h1 span {
     box-shadow: 9px 9px 0 #F5007D;
   }
 
-  .card-top {
-    padding: 8px 18px;
+  .card-top-logo {
+    height: 50px;
   }
 
   .photo-placeholder strong {

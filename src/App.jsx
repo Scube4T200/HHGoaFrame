@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import heic2any from "heic2any";
+import hhGoaLogo from "./assets/HHGoaLogo.png";
 
 const BUILDER_CLASSES = [
   "THE SHIPPER",
@@ -192,34 +193,27 @@ function App() {
     // HEADER
     // -----------------------------
 
-    // Green strip background — tall enough for two lines
+    // Green strip — same color as background, acts as framing zone
     ctx.fillStyle = "#006B45";
-    ctx.fillRect(0, 0, width, 100);
+    ctx.fillRect(0, 0, width, 110);
 
-    // Yellow text — HH / GOA '26
-    ctx.fillStyle = "#FFD900";
-    ctx.font = "bold 30px Arial";
-    ctx.textAlign = "left";
-    ctx.fillText("HH", 55, 50);
+    // Logo — loaded from asset, drawn centered in the strip
+    const logo = await loadImage(hhGoaLogo);
 
-    ctx.textAlign = "right";
-    ctx.fillText("GOA '26", width - 55, 50);
+    // Keep aspect ratio: logo is ~415x372, target height 88px
+    const logoH = 88;
+    const logoW = (logo.width / logo.height) * logoH;
+    const logoX = (width - logoW) / 2;
+    const logoY = (110 - logoH) / 2;
 
-    // Date line — slightly smaller, slightly dimmer
-    ctx.font = "bold 20px Arial";
-    ctx.globalAlpha = 0.85;
-    ctx.textAlign = "left";
-    ctx.fillText("GOA, INDIA · 28–31 OCT 2026", 55, 80);
-    ctx.globalAlpha = 1;
-
-    ctx.textAlign = "left";
+    ctx.drawImage(logo, logoX, logoY, logoW, logoH);
 
     // -----------------------------
     // PHOTO
     // -----------------------------
 
     const photoX = 55;
-    const photoY = 120;
+    const photoY = 130;
     const photoWidth = width - 110;
     const photoHeight = photoWidth;
 
@@ -634,14 +628,11 @@ function App() {
 
             <div className="card-top">
 
-              <div className="card-top-row">
-                <span>HH</span>
-                <span>GOA '26</span>
-              </div>
-
-              <div className="card-top-date">
-                GOA, INDIA · 28–31 OCT 2026
-              </div>
+              <img
+                src={hhGoaLogo}
+                alt="Hacker House Goa"
+                className="card-top-logo"
+              />
 
             </div>
 
