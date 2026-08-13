@@ -193,27 +193,43 @@ function App() {
     // HEADER
     // -----------------------------
 
-    // Green strip — same color as background, acts as framing zone
+    // Green strip
     ctx.fillStyle = "#006B45";
-    ctx.fillRect(0, 0, width, 110);
+    ctx.fillRect(0, 0, width, 100);
 
-    // Logo — loaded from asset, drawn centered in the strip
+    // Yellow text — HH left, GOA '26 right
+    ctx.fillStyle = "#FFD900";
+    ctx.font = "bold 30px Arial";
+    ctx.textAlign = "left";
+    ctx.fillText("HH", 55, 50);
+
+    ctx.textAlign = "right";
+    ctx.fillText("GOA '26", width - 55, 50);
+
+    // Logo — centred between the two text labels, top row
     const logo = await loadImage(hhGoaLogo);
-
-    // Keep aspect ratio: logo is ~415x372, target height 88px
-    const logoH = 88;
+    const logoH = 46;
     const logoW = (logo.width / logo.height) * logoH;
     const logoX = (width - logoW) / 2;
-    const logoY = (110 - logoH) / 2;
-
+    const logoY = (50 - logoH / 2) - 4;
     ctx.drawImage(logo, logoX, logoY, logoW, logoH);
+
+    // Date line below
+    ctx.fillStyle = "#FFD900";
+    ctx.font = "bold 20px Arial";
+    ctx.globalAlpha = 0.85;
+    ctx.textAlign = "left";
+    ctx.fillText("GOA, INDIA · 28–31 OCT 2026", 55, 80);
+    ctx.globalAlpha = 1;
+
+    ctx.textAlign = "left";
 
     // -----------------------------
     // PHOTO
     // -----------------------------
 
     const photoX = 55;
-    const photoY = 130;
+    const photoY = 120;
     const photoWidth = width - 110;
     const photoHeight = photoWidth;
 
@@ -628,11 +644,19 @@ function App() {
 
             <div className="card-top">
 
-              <img
-                src={hhGoaLogo}
-                alt="Hacker House Goa"
-                className="card-top-logo"
-              />
+              <div className="card-top-row">
+                <span>HH</span>
+                <img
+                  src={hhGoaLogo}
+                  alt="Hacker House Goa"
+                  className="card-top-logo"
+                />
+                <span>GOA '26</span>
+              </div>
+
+              <div className="card-top-date">
+                GOA, INDIA · 28–31 OCT 2026
+              </div>
 
             </div>
 
