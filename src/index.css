@@ -267,7 +267,7 @@ h1 span {
 
   padding: 22px;
 
-  background: #111;
+  background: #006B45;
   color: #f1eee5;
 
   box-shadow: 18px 18px 0 #F5007D;
@@ -372,6 +372,8 @@ h1 span {
   text-transform: uppercase;
 
   word-break: break-word;
+
+  color: #FFD900;
 }
 
 .builder-stack {
@@ -380,7 +382,7 @@ h1 span {
   font-size: 0.7rem;
   letter-spacing: 0.1em;
 
-  opacity: 0.7;
+  color: rgba(255, 255, 255, 0.65);
 
   text-transform: uppercase;
 }
@@ -412,6 +414,8 @@ h1 span {
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.1em;
+
+  color: #FFD900;
 }
 
 /* =========================

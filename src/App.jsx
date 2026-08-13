@@ -179,7 +179,7 @@ function App() {
     // BACKGROUND
     // -----------------------------
 
-    ctx.fillStyle = "#111111";
+    ctx.fillStyle = "#006B45";
 
     ctx.fillRect(
       0,
@@ -241,7 +241,7 @@ function App() {
 
     // NAME
 
-    ctx.fillStyle = "#f1eee5";
+    ctx.fillStyle = "#FFD900";
     ctx.font = "bold 68px Arial";
     ctx.textAlign = "left";
 
@@ -258,7 +258,7 @@ function App() {
     // STACK
 
     ctx.font = "bold 26px Arial";
-    ctx.fillStyle = "#aaaaaa";
+    ctx.fillStyle = "rgba(255,255,255,0.65)";
 
     ctx.fillText(
       (
@@ -299,7 +299,7 @@ function App() {
     // FOOTER
     // -----------------------------
 
-    ctx.fillStyle = "#f1eee5";
+    ctx.fillStyle = "#FFD900";
     ctx.font = "bold 21px Arial";
 
     const footerY = height - 150;
